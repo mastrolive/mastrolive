@@ -1,3 +1,3 @@
 ### Welcome to MastroTV👋
 
-<img src="https://cutewallpaper.org/21/equalizer-gif/Index-of-mpplay.gif" />
+<img src="https://amh451.github.io/streetfighters.gif" />
