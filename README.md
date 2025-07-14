@@ -1,4 +1,4 @@
-### Icon/Poster
+### Hello
 
 
 
@@ -11,10 +11,3 @@
 
 
 ---
-
-
-
-<p align="center"> 
-  visitor count<br>
-  <img src="https://profile-counter.glitch.me/insolitum/count.svg" />
-</p>
