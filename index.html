@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MastroTV - Secure Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        #adminContent { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-900">
+
+    <div id="loginOverlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full border border-slate-100">
+            <h2 class="text-2xl font-black text-indigo-900 mb-2">Admin Login</h2>
+            <p class="text-slate-500 text-sm mb-6"></p>
+            <div class="space-y-4">
+                <input type="email" id="loginEmail" placeholder="Email Firebase" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-100">
+                <input type="password" id="loginPass" placeholder="Password" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-100">
+                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95">
+                    Login Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminContent" class="max-w-6xl mx-auto p-4 md:p-10">
+        <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-4xl font-black text-indigo-900 tracking-tight">MASTRO<span class="text-indigo-500">TV</span></h1>
+                <p class="text-slate-500 font-medium">Secure Link Manager</p>
+            </div>
+            <button onclick="handleLogout()" class="bg-red-50 text-red-500 px-4 py-2 rounded-xl font-bold text-xs uppercase">Logout</button>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1">
+                <div class="glass p-6 rounded-3xl shadow-xl border border-white sticky top-10">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="fas fa-edit text-indigo-500"></i> Link Editor</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1 ml-1">Channel Name</label>
+                            <input type="text" id="title" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-100">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1 ml-1">Alias / Link ID</label>
+                            <input type="text" id="alias" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-100 font-mono text-indigo-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase mb-1 ml-1">Original URL (.mpd / .m3u8)</label>
+                            <textarea id="originalUrl" rows="4" class="w-full p-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-indigo-100 text-sm font-mono"></textarea>
+                        </div>
+                        <button onclick="saveLink()" id="btnSave" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl shadow-lg transition-all active:scale-95">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+                    <div class="p-6 border-b bg-slate-50/50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-700">Active Streams</h3>
+                        <span id="linkCount" class="bg-indigo-100 text-indigo-600 text-xs font-bold px-3 py-1 rounded-full text-center">Loading...</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="text-slate-400 text-[10px] uppercase border-b">
+                                    <th class="p-6">Channel Info</th>
+                                    <th class="p-6 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="linkTableBody" class="divide-y divide-slate-50">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // CONFIG (Kekalkan yang asal)
+        const SECRET_KEY = "mastro_super_code_2026"; 
+        const WORKER_URL = "https://mastrotv.online"; 
+        const firebaseConfig = {
+            apiKey: "AIzaSyBNmy3g8lKDeG3_JPYRx05u_WduG9se4E0",
+            authDomain: "short-d56dd.firebaseapp.com",
+            databaseURL: "https://short-d56dd-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "short-d56dd",
+            storageBucket: "short-d56dd.firebasestorage.app",
+            messagingSenderId: "192867097307",
+            appId: "1:192867097307:web:28332b8ce19a888907cafe"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth(app);
+
+        // --- AUTH LOGIC ---
+        window.handleLogin = () => {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            signInWithEmailAndPassword(auth, email, pass).catch(err => alert("Ralat: " + err.message));
+        };
+        window.handleLogout = () => signOut(auth);
+
+        onAuthStateChanged(auth, (user) => {
+            document.getElementById('loginOverlay').style.display = user ? 'none' : 'flex';
+            document.getElementById('adminContent').style.display = user ? 'block' : 'none';
+        });
+
+        // --- TOKEN GEN (24 JAM) ---
+        async function getSecureToken() {
+            const today = new Date().toISOString().split('T')[0]; 
+            const msg = `${SECRET_KEY}-${today}`;
+            const encoder = new TextEncoder();
+            const data = encoder.encode(msg);
+            const hash = await crypto.subtle.digest('SHA-256', data);
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('').substring(0, 16);
+        }
+
+        // --- CORE ACTIONS ---
+        window.saveLink = async function() {
+            const btn = document.getElementById('btnSave');
+            const title = document.getElementById('title').value.trim();
+            const alias = document.getElementById('alias').value.trim().toLowerCase().replace(/\s+/g, '-');
+            const url = document.getElementById('originalUrl').value.trim();
+
+            if(!alias || !url) return alert("Alias dan URL wajib diisi!");
+
+            btn.disabled = true;
+            btn.innerText = "Saving...";
+
+            set(ref(db, 'links/' + alias), {
+                title: title || 'Unnamed Channel',
+                originalUrl: url,
+                updatedAt: Date.now()
+            }).then(() => {
+                alert("✅ Berjaya Disimpan!");
+                document.getElementById('title').value = '';
+                document.getElementById('alias').value = '';
+                document.getElementById('originalUrl').value = '';
+            }).catch(e => alert("Gagal: " + e.message))
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "Save Changes";
+            });
+        };
+
+        window.copyLink = async (alias) => {
+            const token = await getSecureToken();
+            const fullUrl = `${WORKER_URL}/${alias}/default_primary.mpd?token=${token}`;
+            navigator.clipboard.writeText(fullUrl);
+            alert("Pautan Secure Disalin!");
+        };
+
+        window.prepareEdit = (alias, url, title) => {
+            document.getElementById('title').value = title;
+            document.getElementById('alias').value = alias;
+            document.getElementById('originalUrl').value = url;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.deleteLink = (alias) => {
+            if(confirm(`Padam pautan ${alias}?`)) remove(ref(db, 'links/' + alias));
+        };
+
+        // --- REALTIME LISTENER (FIXED COUNT) ---
+        onValue(ref(db, 'links/'), (snapshot) => {
+            const data = snapshot.val();
+            const tbody = document.getElementById('linkTableBody');
+            const countLabel = document.getElementById('linkCount');
+            tbody.innerHTML = '';
+
+            if(!data) {
+                countLabel.innerText = "0 Links";
+                tbody.innerHTML = '<tr><td colspan="2" class="p-10 text-center text-slate-400">Tiada pautan ditemui.</td></tr>';
+                return;
+            }
+
+            const entries = Object.entries(data);
+            countLabel.innerText = `${entries.length} Links`;
+
+            entries.forEach(([alias, val]) => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b">
+                        <td class="p-6">
+                            <div class="font-bold text-slate-800">${val.title}</div>
+                            <div class="text-indigo-500 font-mono text-xs">${alias}</div>
+                        </td>
+                        <td class="p-6">
+                            <div class="flex justify-center gap-2">
+                                <button onclick="copyLink('${alias}')" class="w-10 h-10 rounded-xl bg-indigo-600 text-white"><i class="fas fa-copy"></i></button>
+                                <button onclick="prepareEdit('${alias}', '${val.originalUrl}', '${val.title}')" class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600"><i class="fas fa-edit"></i></button>
+                                <button onclick="deleteLink('${alias}')" class="w-10 h-10 rounded-xl bg-red-50 text-red-500"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+        });
+    </script>
+</body>
+</html>
