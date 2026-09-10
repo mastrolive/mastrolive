@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- ANIMATED HEADER BANNER (FIXED URL ENCODING) -->
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0f172a,1e293b,334155,0284c7&height=200&section=header&text=ASSET%20AND%20FILE%20STORAGE&fontSize=38&fontColor=ffffff&animation=fadeIn&fontAlignY=38" width="100%" alt="Header Banner" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=0f172a,1e293b,334155,0284c7&height=200&section=header&text=MASTRO&fontSize=38&fontColor=ffffff&animation=fadeIn&fontAlignY=38" width="100%" alt="Header Banner" />
 
 <br/>
 
