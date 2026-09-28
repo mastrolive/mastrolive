@@ -15,9 +15,9 @@
   <a href="#-folders-overview"><img src="https://img.shields.io/badge/Status-Operational-00C853?style=for-the-badge&logo=statuspage&logoColor=white" alt="Status" /></a>
 </p>
 
-<!-- VISITOR COUNTER BADGE -->
+<!-- VISITOR COUNTER BADGE (STABLE & DAILY TRACKING) -->
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=mastrolive-mastrolive&label=PROFILE%20VIEWS&color=00f5d4&style=for-the-badge" alt="Visitor Count" />
+  <img src="https://img.shields.io/endpoint?url=https://hits.dwyl.com/mastrolive/mastrolive-assets-daily.json&show_count=true&style=for-the-badge&color=00f5d4&label=STORAGE%20DAILY%20VIEWS" alt="Daily Visitor Count" />
 </p>
 
 </div>
