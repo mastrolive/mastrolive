@@ -15,9 +15,11 @@
   <a href="#-folders-overview"><img src="https://img.shields.io/badge/Status-Operational-00C853?style=for-the-badge&logo=statuspage&logoColor=white" alt="Status" /></a>
 </p>
 
-<!-- VISITOR COUNTER BADGE (STABLE & DAILY TRACKING) -->
+<!-- DYNAMIC STORAGE & REPO METRICS -->
 <p align="center">
-  <img src="https://img.shields.io/endpoint?url=https://hits.dwyl.com/mastrolive/mastrolive-assets-daily.json&show_count=true&style=for-the-badge&color=00f5d4&label=STORAGE%20DAILY%20VIEWS" alt="Daily Visitor Count" />
+  <img src="https://img.shields.io/github/repo-size/mastrolive/mastrolive-assets?style=for-the-badge&label=STORAGE%20SIZE&color=00f5d4&logo=files&logoColor=black" alt="Storage Size" />
+  <img src="https://img.shields.io/github/last-commit/mastrolive/mastrolive-assets?style=for-the-badge&label=LAST%20UPLOAD&color=2563eb&logo=git&logoColor=white" alt="Last Upload" />
+  <img src="https://img.shields.io/badge/CDN-FASTLY%20%2F%20JSDELIVR-7B2CBF?style=for-the-badge&logo=jsdelivr&logoColor=white" alt="CDN Provider" />
 </p>
 
 </div>
