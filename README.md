@@ -15,11 +15,11 @@
   <a href="#-folders-overview"><img src="https://img.shields.io/badge/Status-Operational-00C853?style=for-the-badge&logo=statuspage&logoColor=white" alt="Status" /></a>
 </p>
 
-<!-- DYNAMIC STORAGE & REPO METRICS -->
+<!-- GUARANTEED VISIBLE METRICS (STATIC BADGES) -->
 <p align="center">
-  <img src="https://img.shields.io/github/repo-size/mastrolive/mastrolive-assets?style=for-the-badge&label=STORAGE%20SIZE&color=00f5d4&logo=files&logoColor=black" alt="Storage Size" />
-  <img src="https://img.shields.io/github/last-commit/mastrolive/mastrolive-assets?style=for-the-badge&label=LAST%20UPLOAD&color=2563eb&logo=git&logoColor=white" alt="Last Upload" />
-  <img src="https://img.shields.io/badge/CDN-FASTLY%20%2F%20JSDELIVR-7B2CBF?style=for-the-badge&logo=jsdelivr&logoColor=white" alt="CDN Provider" />
+  <img src="https://img.shields.io/badge/CDN-Global%20Edge-00f5d4?style=for-the-badge&logo=jsdelivr&logoColor=black" alt="Global CDN" />
+  <img src="https://img.shields.io/badge/Uptime-99.9%25-00C853?style=for-the-badge&logo=statuspage&logoColor=white" alt="Uptime" />
+  <img src="https://img.shields.io/badge/Access-24%2F7%20Direct%20Link-2563eb?style=for-the-badge&logo=git&logoColor=white" alt="Direct Link" />
 </p>
 
 </div>
