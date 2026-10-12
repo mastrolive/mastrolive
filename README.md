@@ -35,5 +35,4 @@ This repository operates as an ultra-reliable file storage hub structured precis
 ```text
  📦 STORAGE-ROOT
  ├── 🎨 Ico/
- ├── 🖼️ Poster/
- └── 📡 offline/
+ └── 🖼️ Poster/
